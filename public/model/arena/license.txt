@@ -1,0 +1,11 @@
+Model Information:
+* title:	Egyptian Ruins
+* source:	https://sketchfab.com/3d-models/egyptian-ruins-19337b2afcc94f689203b2c9bf6c9f85
+* author:	local.yany (https://sketchfab.com/local.yany)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Egyptian Ruins" (https://sketchfab.com/3d-models/egyptian-ruins-19337b2afcc94f689203b2c9bf6c9f85) by local.yany (https://sketchfab.com/local.yany) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
