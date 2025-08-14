@@ -18,3 +18,96 @@ body, html {
   height: 100%;
   width: 100%;
 }
+
+#loading-screen {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  color: white;
+  font-family: sans-serif;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+.point
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+
+.point .point-label
+{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ffffff77;
+    background: rgba(37, 37, 37, 0.6);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: Helvetica, Arial, sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 100;
+    font-size: 14px;
+}
+
+.point .point-label:hover {
+  background: rgb(37, 37, 37);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+
+.point .point-description
+{
+    position: absolute;
+    top: 30px;
+    left: -95px;
+    width: 150px;
+    padding: 20px;
+    border-radius: 4px;
+    background: #00000077;
+    border: 1px solid #ffffff77;
+    color: #ffffff;
+    line-height: 1.3em;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    font-size: 14px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.point:hover .point-description
+{
+  
+    opacity: 1;
+}
+
+
+.point .point-label
+{
+    /* ... */
+    transform: scale(0, 0);
+    transition: transform 0.3s;
+}
+
+.point.visible .point-label
+{
+    transform: scale(1, 1);
+}

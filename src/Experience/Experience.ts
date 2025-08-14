@@ -8,6 +8,8 @@ import Time from './Utils/Time';
 import Resources from './Utils/Resources';
 import sources from '../sources';
 
+import SpotManager from '../ui/SpotManager';
+
 export default class Experience {
     private static _instance: Experience | null = null;
 
@@ -19,6 +21,7 @@ export default class Experience {
     public world: World | null = null;
     public readonly time: Time;
     public readonly resources: Resources;
+    public readonly spotManager: SpotManager;
 
     private constructor(canvas: HTMLCanvasElement) {
         // setup
@@ -29,8 +32,9 @@ export default class Experience {
         this.camera = new Camera(this.sizes, this.scene, this.canvas);
         this.renderer = new Renderer(this.sizes, this.canvas, this.scene, this.camera.instance);
         this.resources = new Resources(sources, this.renderer.instance, this.scene);
-       
 
+        this.spotManager = new SpotManager(this.camera.instance, this.sizes, this.scene);
+        this.spotManager.addGridSpots();
         // реакція на resize
         this.sizes.on('resize', () => {
             this.resize();
@@ -40,11 +44,15 @@ export default class Experience {
         // реакція на tick
         this.time.on('tick', () => {
             this.update();
+
+
         });
 
         this.resources.on('ready', () => {
             console.log('Resources are ready');
             this.world = new World(this.scene, this.resources);
+
+            document.getElementById('loading-screen')?.classList.add('hidden');
         });
     }
 
@@ -74,5 +82,6 @@ export default class Experience {
 
     update() {
         this.renderer.update();
+        this.spotManager.update();
     }
 }
