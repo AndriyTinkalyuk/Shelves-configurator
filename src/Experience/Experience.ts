@@ -1,14 +1,19 @@
 import * as THREE from 'three';
 
-import Renderer from './Renderer';
 import Sizes from './Utils/Sizes';
-import Camera from './Camera';
-import World from './World/World';
 import Time from './Utils/Time';
 import Resources from './Utils/Resources';
+import EventBus from './Utils/EventBus';
+
+import Renderer from './Renderer';
+import Camera from './Camera';
+import World from './World/World';
+
 import sources from '../sources';
 
-import SpotManager from '../ui/SpotManager';
+import SpotManager from './ui/SpotManager';
+import CatalogManager from './ui/CatalogManager';
+import ItemFactory from './factory/ItemFactory';
 
 export default class Experience {
     private static _instance: Experience | null = null;
@@ -22,19 +27,27 @@ export default class Experience {
     public readonly time: Time;
     public readonly resources: Resources;
     public readonly spotManager: SpotManager;
+    public readonly bus: EventBus;
+    public readonly catalogManager: CatalogManager;
+    itemFactory: ItemFactory;
 
     private constructor(canvas: HTMLCanvasElement) {
         // setup
         this.canvas = canvas;
         this.time = new Time();
         this.scene = new THREE.Scene();
+        this.bus = new EventBus();
         this.sizes = new Sizes(this.canvas);
         this.camera = new Camera(this.sizes, this.scene, this.canvas);
         this.renderer = new Renderer(this.sizes, this.canvas, this.scene, this.camera.instance);
         this.resources = new Resources(sources, this.renderer.instance, this.scene);
 
-        this.spotManager = new SpotManager(this.camera.instance, this.sizes, this.scene);
+        this.catalogManager = new CatalogManager(this.bus);
+        this.catalogManager.initCatalog();
+        this.catalogManager.renderCatalog();
+        this.spotManager = new SpotManager(this.camera.instance, this.sizes, this.scene, this.bus);
         this.spotManager.addGridSpots();
+        this.itemFactory = new ItemFactory(this.scene, this.bus);
         // реакція на resize
         this.sizes.on('resize', () => {
             this.resize();

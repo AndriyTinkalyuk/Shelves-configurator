@@ -7,7 +7,10 @@ export default class Shelves {
     constructor(scene: THREE.Scene, resources: Resources) {
         
         this.model = (resources.get('shelves') as { scene: THREE.Group<THREE.Object3DEventMap> }).scene;
+        console.log(this.model);
+
         this.model.rotation.y = Math.PI / 2.5; // Rotate the model to face the camera
+        this.model.position.set(0, 0, 0); // Set the position of the model
         console.log(this.model);
 
         this.model.traverse((o : any) => {
