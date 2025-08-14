@@ -40,7 +40,7 @@ export default class Experience {
         this.sizes = new Sizes(this.canvas);
         this.camera = new Camera(this.sizes, this.scene, this.canvas);
         this.renderer = new Renderer(this.sizes, this.canvas, this.scene, this.camera.instance);
-        this.resources = new Resources(sources, this.renderer.instance, this.scene);
+        this.resources = new Resources(sources, this.renderer.instance);
 
         this.catalogManager = new CatalogManager(this.bus);
         this.catalogManager.initCatalog();

@@ -6,13 +6,16 @@ import Floor from './Floor';
 
 export default class World {
     private scene: THREE.Scene;
+    floor: Floor;
+    lighting: Lighting;
+    shelves: Shelves;
 
     constructor(scene: THREE.Scene, resources: Resources) {
         this.scene = scene;
 
-        const shelves = new Shelves(this.scene, resources);
-        const lighting = new Lighting(this.scene);
-        const floor = new Floor(this.scene);
+         this.shelves = new Shelves(this.scene, resources);
+        this.lighting = new Lighting(this.scene);
+        this.floor = new Floor(this.scene);
     }
         
     

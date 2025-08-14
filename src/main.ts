@@ -5,4 +5,4 @@ const canvas = document.querySelector('canvas') as HTMLCanvasElement
 
 console.log(canvas);
 
-const experience = Experience.init(canvas)
+Experience.init(canvas)

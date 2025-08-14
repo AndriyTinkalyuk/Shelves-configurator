@@ -28,8 +28,6 @@ type ItemsMap = Record<string, unknown>;
 
 export default class Resources extends EventBus {
   private renderer: THREE.WebGLRenderer;
-  private scene: THREE.Scene;
-
   private sources: ResourceSource[];
   private items: ItemsMap = {};
   private toLoad = 0;
@@ -40,11 +38,10 @@ export default class Resources extends EventBus {
 
   
 
-  constructor(sources: ResourceSource[], renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
+  constructor(sources: ResourceSource[], renderer: THREE.WebGLRenderer) {
     super();
 
     this.renderer = renderer;
-    this.scene = scene;
 
     this.sources = sources;
     this.toLoad = this.sources.length;
