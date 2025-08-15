@@ -47,7 +47,33 @@ export default class Experience {
         this.catalogManager.renderCatalog();
         this.spotManager = new SpotManager(this.camera.instance, this.sizes, this.scene, this.bus);
         this.spotManager.addGridSpots();
-        this.itemFactory = new ItemFactory(this.scene, this.bus);
+        
+        // Координатор (поза фабрикою)
+        this.itemFactory = new ItemFactory({
+          "1": "/model/plant/potted_plant_02_2k.gltf",
+          "2": "/model/statue/marble_bust_01_2k.gltf"
+        });
+
+        let pendingSpot: { position: THREE.Vector3; element: HTMLElement | null } | null = null;
+
+        this.bus.on('spotClicked', (payload) => {
+          pendingSpot = payload;
+        });
+
+        this.bus.on('catalogItemSelected', async (itemId: string) => {
+          const position = pendingSpot?.position?.clone();
+          const element = pendingSpot?.element;
+
+          const obj = await this.itemFactory.create(itemId, {
+            position: position ? position.setY(position.y - 0.15) : undefined
+          });
+      
+          this.scene.add(obj);
+          if (element) element.style.display = 'none';
+          pendingSpot = null;
+        });
+
+
         // реакція на resize
         this.sizes.on('resize', () => {
             this.resize();

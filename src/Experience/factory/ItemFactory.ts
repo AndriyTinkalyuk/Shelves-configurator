@@ -1,56 +1,49 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
-import type EventBus from '../Utils/EventBus';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+
+// Фабрика
+export interface ItemOptions {
+  position?: THREE.Vector3;
+  scale?: number | THREE.Vector3;
+  castShadow?: boolean;
+  receiveShadow?: boolean;
+}
+
 export default class ItemFactory {
-    scene: THREE.Scene;
-    bus: EventBus;
-    itemPath: { [key: string]: string };
-    loader: GLTFLoader;
-    position: THREE.Vector3 | null;
-    element: HTMLElement | null;
+  private loader = new GLTFLoader();
+  private readonly itemPath: Record<string, string>;
 
-    constructor(scene: THREE.Scene, bus: EventBus) {
-        this.loader = new GLTFLoader();
-        this.scene = scene;
-        this.bus = bus;
-        this.position = null;
-        this.element = null;
+  constructor(itemPath: Record<string, string>) {
+    this.itemPath = itemPath;
+  }
 
-        this.itemPath = {
-            "1" : "/model/plant/potted_plant_02_2k.gltf",
-            "2" : "/model/statue/marble_bust_01_2k.gltf"
-        };
+  async create(id: string, opts: ItemOptions = {}): Promise<THREE.Object3D> {
+    const path = this.itemPath[id];
+    if (!path) throw new Error(`Unknown item id: ${id}`);
 
-        this.bus.on('catalogItemSelected', (itemId: string) => {
-            this.createItem(itemId);
-            if(this.element){
-                this.element.style.display = 'none';
-            }
-        });
+    const gltf = await new Promise<GLTF>((res, rej) =>
+      this.loader.load(path, res, undefined, rej)
+    );
 
-        this.bus.on('spotClicked', (payload) => {
-            this.position = payload.position;
-            this.element = payload.element;
-        });
+    gltf.scene.traverse(obj => {
+      const m = obj as THREE.Mesh;
+      if (m.isMesh) {
+        m.castShadow = opts.castShadow ?? true;
+        m.receiveShadow = opts.receiveShadow ?? true;
+      }
+    });
+
+    if (opts.scale) {
+      if (typeof opts.scale === 'number') gltf.scene.scale.setScalar(opts.scale);
+      else gltf.scene.scale.copy(opts.scale);
+    } else {
+      gltf.scene.scale.setScalar(0.3);
     }
 
-    createItem(id: string) {
-        const item = this.itemPath[id];
-        if (item) {
-            this.loader.load(item, (gltf) => {
-                gltf.scene.traverse((child) => {
-                    if (child instanceof THREE.Mesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-                gltf.scene.scale.set(0.3, 0.3, 0.3);
-                if (this.position) {
-                    gltf.scene.position.copy(this.position);
-                    gltf.scene.position.y -= 0.15;
-                }
-                this.scene.add(gltf.scene);
-            })
-        }
-    }
+    if (opts.position) gltf.scene.position.copy(opts.position);
+
+    return gltf.scene;
+  }
 }
